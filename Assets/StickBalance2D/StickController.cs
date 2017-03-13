@@ -9,6 +9,9 @@ public class StickController : UnitController
 	private float InitialAngle;
 
 	[SerializeField]
+	private Vector2 InitialPosition;
+
+	[SerializeField]
 	private float MaxVelocity;
 
 	[SerializeField]
@@ -25,6 +28,7 @@ public class StickController : UnitController
 		handle = transform.Find ("Handle").GetComponent<Rigidbody2D> ();
 		ball = transform.Find ("Ball").GetComponent<Rigidbody2D> ();
 		transform.Rotate(new Vector3(0.0f, 0.0f, Random.Range(-InitialAngle, InitialAngle)));
+		transform.position = new Vector2(Random.Range(-InitialPosition.x, InitialPosition.x), Random.Range(-InitialPosition.y, InitialPosition.y));
 	}
 
 	void FixedUpdate () 
