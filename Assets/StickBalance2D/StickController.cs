@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using SharpNeat.Phenomes;
 
-public class StickController : UnitController {
-
+public class StickController : UnitController 
+{
 	[SerializeField]
 	private float InitialAngle;
 
 	[SerializeField]
 	private float MaxVelocity;
+
+	[SerializeField]
+	private float WallCollisionPenalty;
 
 	private Rigidbody2D handle;
 	private Rigidbody2D ball;
@@ -17,16 +20,18 @@ public class StickController : UnitController {
 	private IBlackBox box;
 	private float fitness;
 
-	void Awake() {
+	void Awake() 
+	{
 		handle = transform.Find ("Handle").GetComponent<Rigidbody2D> ();
 		ball = transform.Find ("Ball").GetComponent<Rigidbody2D> ();
 		transform.Rotate(new Vector3(0.0f, 0.0f, Random.Range(-InitialAngle, InitialAngle)));
 	}
 
-	void FixedUpdate () {
+	void FixedUpdate () 
+	{
 
-		if (IsRunning) {
-
+		if (IsRunning) 
+		{
 			// Get inputs
 
 			Vector2 ballPosition = (ball.transform.position - handle.transform.position).normalized;
@@ -36,7 +41,8 @@ public class StickController : UnitController {
 			inputArr [0] = ballAngle;
 			inputArr [1] = ball.velocity.x;
 			inputArr [2] = ball.velocity.y;
-
+			inputArr [3] = handle.transform.position.x;
+			inputArr [4] = handle.transform.position.y;
 
 			// Run neural network
 
@@ -73,5 +79,10 @@ public class StickController : UnitController {
 	public override float GetFitness()
 	{
 		return Mathf.Max(fitness, 0.0f);
+	}
+
+	public void OnWallHit()
+	{
+		fitness -= WallCollisionPenalty;
 	}
 }
