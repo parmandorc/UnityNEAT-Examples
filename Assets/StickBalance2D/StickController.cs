@@ -5,6 +5,12 @@ using SharpNeat.Phenomes;
 
 public class StickController : UnitController {
 
+	[SerializeField]
+	private float InitialAngle;
+
+	[SerializeField]
+	private float MaxVelocity;
+
 	private Rigidbody2D handle;
 	private Rigidbody2D ball;
 	private bool IsRunning;
@@ -14,6 +20,7 @@ public class StickController : UnitController {
 	void Awake() {
 		handle = transform.Find ("Handle").GetComponent<Rigidbody2D> ();
 		ball = transform.Find ("Ball").GetComponent<Rigidbody2D> ();
+		transform.Rotate(new Vector3(0.0f, 0.0f, Random.Range(-InitialAngle, InitialAngle)));
 	}
 
 	void FixedUpdate () {
@@ -43,10 +50,12 @@ public class StickController : UnitController {
 			float vx = (float)outputArr[0] * 2 - 1;
 			float vy = (float)outputArr[1] * 2 - 1;
 
-			handle.velocity = Vector2.ClampMagnitude(new Vector2(vx, vy), 1.0f);
+			handle.velocity = Vector2.ClampMagnitude(new Vector2(vx, vy), 1.0f) * MaxVelocity;
+
 
 			// Update fitness
-			fitness += Mathf.Max(ballPosition.y * Time.deltaTime, 0.0f);
+
+			fitness += ballPosition.y * Time.deltaTime;
 		}
 	}
 
@@ -63,6 +72,6 @@ public class StickController : UnitController {
 
 	public override float GetFitness()
 	{
-		return fitness;
+		return Mathf.Max(fitness, 0.0f);
 	}
 }
