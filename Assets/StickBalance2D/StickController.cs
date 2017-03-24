@@ -29,6 +29,7 @@ public class StickController : UnitController
 		ball = transform.Find ("Ball").GetComponent<Rigidbody2D> ();
 		transform.Rotate(new Vector3(0.0f, 0.0f, Random.Range(-InitialAngle, InitialAngle)));
 		transform.position = new Vector2(Random.Range(-InitialPosition.x, InitialPosition.x), Random.Range(-InitialPosition.y, InitialPosition.y));
+		fitness = 0.0f;
 	}
 
 	void FixedUpdate () 
